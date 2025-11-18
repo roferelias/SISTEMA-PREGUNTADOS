@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro Docente - Intellecto Unida</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styleLogin.css') }}" />
+</head>
+<body>
+  <div class="login-container">
+    <h1 class="title">INTELLECTO</h1>
+    <h2 class="subtitle">Crear Usuario</h2>
+
+    <form action="{{ url_for('register') }}" method="POST" autocomplete="off" novalidate>
+      <div class="input-group">
+        <label for="regName">Nombre</label>
+        <input type="text" id="regName" name="regName" placeholder="Elegí un nombre de usuario" required>
+      </div>
+
+      <div class="input-group">
+        <label for="regPass">Contraseña</label>
+        <input type="password" id="regPass" name="regPass" placeholder="Elegí una contraseña" required>
+      </div>
+
+      <button type="submit" class="btn-login">Crear cuenta</button>
+
+      <div class="helper-links">
+        <a class="link" href="{{ url_for('index') }}">¿Ya tenés cuenta? Iniciar sesión</a>
+      </div>
+
+      {% if regError %}
+        <div class="msg error">{{ regError }}</div>
+      {% endif %}
+    </form>
+  </div>
+</body>
+</html>

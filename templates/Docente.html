@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Panel Docente - Competencia</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styleDocente.css') }}"
+    />
+  </head>
+  <body>
+    <!-- ============== BOTÓN LOGOUT ============== -->
+    <a href="{{ url_for('logout') }}" class="btn-logout">Cerrar Sesión 🚪</a>
+
+    <h1>📚 Bienvenido {{ username }} al Panel del Docente</h1>
+
+    <!-- Contenedor de notificaciones -->
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="main-container">
+      <div class="config-column">
+        <!-- ============== CONFIGURACIÓN ============== -->
+        <section class="box config-section" aria-labelledby="config-title">
+          <h2 id="config-title">⚙️ Configuración</h2>
+
+          <div class="form-row">
+            <label for="rondasInput">Preguntas por Enfrentamiento:</label>
+            <input
+              type="number"
+              id="rondasInput"
+              min="1"
+              value="1"
+              placeholder="Ej: 3"
+            />
+          </div>
+
+          <div class="form-row">
+            <label for="grupoSelect">Grupo de Competencia:</label>
+            <select id="grupoSelect">
+              <option value="mañana">Mañana</option>
+              <option value="tarde">Tarde</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- ============== MATERIAS ============== -->
+        <section class="box materias-section" aria-labelledby="materias-title">
+          <h2 id="materias-title">🎯 Materias</h2>
+
+          <div class="form-row">
+            <input
+              type="text"
+              id="materia"
+              placeholder="Ej: Matemáticas..."
+              autocomplete="off"
+            />
+            <button type="button" id="btnAddMateria" onclick="addMateria()">
+              ➕ Agregar
+            </button>
+          </div>
+
+          <ul id="materiasList" aria-live="polite"></ul>
+
+          <!-- ITEM MATERIA -->
+          <template id="tpl-materia-item">
+            <li>
+              <span class="item-text"></span>
+              <div class="row-actions">
+                <button
+                  type="button"
+                  class="btn-edit"
+                  title="Editar"
+                  aria-label="Editar materia"
+                >
+                  ✏️
+                </button>
+                <button
+                  type="button"
+                  class="btn-delete"
+                  title="Eliminar"
+                  aria-label="Eliminar materia"
+                >
+                  🗑️
+                </button>
+              </div>
+            </li>
+          </template>
+
+          <!-- EDITOR INLINE MATERIA -->
+          <template id="tpl-materia-editor">
+            <div class="inline-editor">
+              <input type="text" class="inp-materia-edit" />
+              <div class="row-actions">
+                <button type="button" class="btn-save">💾 Guardar</button>
+                <button type="button" class="btn-cancel">✖️ Cancelar</button>
+              </div>
+            </div>
+          </template>
+
+          <div class="stats">
+            <span id="materias-count">0 Materias Cargadas</span>
+          </div>
+        </section>
+
+        <!-- ============== EQUIPOS ============== -->
+        <section class="box equipos-section" aria-labelledby="equipos-title">
+          <h2 id="equipos-title">👥 Nombre de Jugador o Equipo</h2>
+
+          <div class="form-row">
+            <input
+              type="text"
+              id="equipo"
+              placeholder="Ej: Los Genios..."
+              autocomplete="off"
+            />
+            <button type="button" id="btnAddEquipo" onclick="addEquipo()">
+              ➕ Agregar
+            </button>
+          </div>
+
+          <ul id="equiposList" aria-live="polite"></ul>
+
+          <!-- ITEM EQUIPO -->
+          <template id="tpl-equipo-item">
+            <li>
+              <span class="item-text"></span>
+              <span class="item-score-strong"
+                ><strong><span class="score-text"></span></strong
+              ></span>
+              <div class="row-actions">
+                <button
+                  type="button"
+                  class="btn-edit"
+                  title="Editar"
+                  aria-label="Editar jugador o equipo"
+                >
+                  ✏️
+                </button>
+                <button
+                  type="button"
+                  class="btn-delete"
+                  title="Eliminar"
+                  aria-label="Eliminar jugador o equipo"
+                >
+                  🗑️
+                </button>
+              </div>
+            </li>
+          </template>
+
+          <!-- EDITOR INLINE EQUIPO -->
+          <template id="tpl-equipo-editor">
+            <div class="inline-editor">
+              <input type="text" class="inp-equipo-edit" />
+              <div class="row-actions">
+                <button type="button" class="btn-save">💾 Guardar</button>
+                <button type="button" class="btn-cancel">✖️ Cancelar</button>
+              </div>
+            </div>
+          </template>
+
+          <div class="stats">
+            <span id="equipos-count">0 Jugadores Participando</span>
+          </div>
+        </section>
+      </div>
+      <!-- /config-column -->
+
+<!-- ============== PREGUNTAS ============== -->
+<section class="box preguntas-section" aria-labelledby="preguntas-title">
+  <h2 id="preguntas-title">❓Preguntas</h2>
+
+  <!-- Formulario alta -->
+  <div class="preguntas-form">
+    <label for="materiaSelect">Seleccionar materia</label>
+    <select id="materiaSelect">
+      <option value="">Seleccionar materia</option>
+    </select>
+
+    <label for="pregunta">Texto de la pregunta</label>
+    <input
+      type="text"
+      id="pregunta"
+      placeholder=" Escribe tu pregunta aquí..."
+    />
+
+    <!-- NUEVO: Campo para imagen -->
+    <label for="imagenPregunta">Imagen de la pregunta (opcional)</label>
+    <div class="file-upload-wrapper">
+      <input
+        type="file"
+        id="imagenPregunta"
+        accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+      />
+      <div id="previewPregunta" class="image-preview"></div>
+    </div>
+
+    <label for="resp1">Respuesta correcta</label>
+    <input type="text" id="resp1" placeholder=" Respuesta correcta" />
+
+    <label for="resp2">Respuesta incorrecta 1</label>
+    <input type="text" id="resp2" placeholder=" Respuesta incorrecta 1" />
+
+    <label for="resp3">Respuesta incorrecta 2</label>
+    <input type="text" id="resp3" placeholder=" Respuesta incorrecta 2" />
+
+    <button type="button" id="btnAddPregunta" onclick="addPregunta()">
+      ➕ Agregar Pregunta
+    </button>
+  </div>
+
+  <!-- Filtros de preguntas cargadas -->
+  <div class="filters-row">
+    <div class="form-row">
+      <label for="filtroMateria">Filtrar por materia</label>
+      <select id="filtroMateria">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="filtroTexto">Buscar por texto</label>
+      <input
+        type="text"
+        id="filtroTexto"
+        placeholder=" Buscar en pregunta o respuestas..."
+      />
+    </div>
+  </div>
+
+  <!-- Resumen por materia (cuando no hay filtro) -->
+  <ul id="preguntasList" aria-live="polite"></ul>
+  <template id="tpl-resumen-item">
+    <li>
+      <span class="item-text"></span>
+      <div class="row-actions"></div>
+    </li>
+  </template>
+
+  <!-- ITEM PREGUNTA (detallado al filtrar) - ACTUALIZADO -->
+  <template id="tpl-pregunta-item">
+    <li>
+      <div class="col">
+        <strong class="item-materia-strong"
+          ><span class="item-materia"></span></strong
+        >:
+        <span class="item-text"></span>
+        <div class="item-imagen-container"></div>
+      </div>
+      <div class="row-actions">
+        <button
+          type="button"
+          class="btn-edit"
+          title="Editar"
+          aria-label="Editar pregunta"
+        >
+          ✏️
+        </button>
+        <button
+          type="button"
+          class="btn-delete"
+          title="Eliminar"
+          aria-label="Eliminar pregunta"
+        >
+          🗑️
+        </button>
+      </div>
+    </li>
+  </template>
+
+  <!-- EDITOR INLINE PREGUNTA (MODIFICADO CON IMAGEN) -->
+  <template id="tpl-pregunta-editor">
+    <div class="inline-editor pregunta-editor">
+      <div class="grid-2">
+        <div>
+          <label>Materia</label>
+          <select class="inp-preg-materia"></select>
+        </div>
+        <div>
+          <label>Pregunta</label>
+          <input type="text" class="inp-preg-texto" />
+        </div>
+      </div>
+      
+      <!-- NUEVO: Campo de imagen en el editor -->
+      <div class="editor-imagen-section">
+        <label>Imagen (opcional)</label>
+        <input type="file" class="inp-preg-imagen" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" />
+        <div class="editor-preview-container"></div>
+      </div>
+
+      <div class="row-actions">
+        <button type="button" class="btn-save btn-save-question">
+          💾 Guardar Pregunta
+        </button>
+      </div>
+
+      <hr style="margin: 16px 0" />
+
+      <div class="grid-3">
+        <div>
+          <label>Correcta</label>
+          <input type="text" class="inp-preg-r1" />
+        </div>
+        <div>
+          <label>Incorrecta 1</label>
+          <input type="text" class="inp-preg-r2" />
+        </div>
+        <div>
+          <label>Incorrecta 2</label>
+          <input type="text" class="inp-preg-r3" />
+        </div>
+      </div>
+      <div class="row-actions">
+        <button type="button" class="btn-save btn-save-answers">
+          💾 Guardar Respuestas
+        </button>
+        <button type="button" class="btn-cancel">✖️ Cancelar</button>
+      </div>
+    </div>
+  </template>
+
+  <div class="stats">
+    <span id="preguntas-count">0 Preguntas Cargadas</span>
+  </div>
+</section>
+
+    <button class="btn-iniciar" onclick="startCompetencia()">
+      🚀 Iniciar Competencia
+    </button>
+    <script src="{{ url_for('static', filename='js/scriptDocente.js') }}"></script>
+  </body>
+</html>

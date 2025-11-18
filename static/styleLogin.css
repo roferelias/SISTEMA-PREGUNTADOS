@@ -1,0 +1,231 @@
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Base ===== */
+/* Sin importar fuentes externas: usamos stack del sistema */
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  /* Gradiente similar al juego (#1f4287, #278ea5, #21e6c1) */
+  background: linear-gradient(135deg, #1f4287, #278ea5, #21e6c1);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Estrellas suaves (sin imágenes externas) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(
+      2px 2px at 20% 30%,
+      rgba(255, 255, 255, 0.7),
+      transparent
+    ),
+    radial-gradient(2px 2px at 40% 70%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 60% 40%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 80% 20%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(3px 3px at 90% 60%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(2px 2px at 15% 80%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(2px 2px at 70% 85%, rgba(255, 255, 255, 0.7), transparent);
+  background-repeat: repeat;
+  background-size: 1000px 1000px;
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* ===== Card ===== */
+.login-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  padding: 2.5rem;
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+}
+
+.title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, #fff, #ffd700, #fff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 26px rgba(255, 215, 0, 0.45);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.6rem;
+  opacity: 0.95;
+}
+
+/* ===== Inputs ===== */
+.input-group {
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+.input-group label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.25s ease;
+}
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+.input-group input:focus {
+  outline: none;
+  border-color: #ffd700;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* ===== Botones ===== */
+.btn-login,
+.btn-student {
+  width: 100%;
+  border: none;
+  color: #fff;
+  padding: 13px 30px;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  letter-spacing: 0.7px;
+  display: inline-block;
+  text-align: center;
+}
+.btn-login {
+  background: linear-gradient(135deg, #ff6b9d, #4facfe);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  margin-bottom: 1rem;
+}
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.btn-student {
+  background: #296eb3;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
+.btn-student:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+/* Enlaces de ayuda (cambiar de login/registro) */
+.helper-links {
+  margin: 0.5rem 0 1.2rem;
+} /* top 0.5rem, bottom 1.2rem */
+.link {
+  background: transparent;
+  border: none;
+  color: #fff;
+  opacity: 0.95;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 6px 10px;
+}
+.link:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+/* Mensajes */
+.msg {
+  margin-top: 1rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-align: center;
+}
+.msg.error {
+  color: #ff4757;
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.35);
+}
+.msg.ok {
+  color: #0f5132;
+  background: rgba(25, 135, 84, 0.12);
+  border: 1px solid rgba(25, 135, 84, 0.35);
+}
+
+/* Divider */
+.divider {
+  margin: 1.2rem 0;
+  position: relative;
+}
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.divider span {
+  background: rgba(0, 0, 0, 0); /* transparente sobre el blur */
+  padding: 0 0.9rem;
+  position: relative;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 2rem;
+    margin: 1rem;
+  }
+  .title {
+    font-size: 2.2rem;
+  }
+}

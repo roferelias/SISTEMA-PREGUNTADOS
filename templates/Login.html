@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Docente - Intellecto Unida</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styleLogin.css') }}" />
+</head>
+<body>
+  <div class="login-container">
+    <h1 class="title">INTELLECTO</h1>
+    <h2 class="subtitle">Panel de Acceso</h2>
+
+    <form action="{{ url_for('login') }}" method="POST" autocomplete="on" novalidate>
+      <div class="input-group">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+      </div>
+
+      <button type="submit" class="btn-login">Ingresar al Panel Docente</button>
+
+          <div class="helper-links">
+
+        
+            <a class="link" href="{{ url_for('register') }}">¿No tenés cuenta? Crear usuario</a> 
+        
+      </div>
+    </form>
+    <a href="{{ url_for('juego_page') }}" class="btn-student">Ir Directamente al Juego</a>
+    {% if error %}
+      <div class="msg error">{{ error }}</div>
+    {% endif %}
+  </div>
+</body>
+</html>
